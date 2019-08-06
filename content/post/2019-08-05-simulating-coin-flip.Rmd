@@ -9,3 +9,5 @@ tags:
   - probability
   - bimonial
 ---
+
+Simulation is one of the statistical methods for looking at the best decision to make given a scenario. The underlying idea is that, if we can playout the scenario a lot of times, we can know the expected outcome of the scenario.
