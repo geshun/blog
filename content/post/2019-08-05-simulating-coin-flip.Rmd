@@ -1,0 +1,11 @@
+---
+title: Simulating Coin Flip
+author: geshun
+date: '2019-08-05'
+slug: simulating-coin-flip
+categories:
+  - R
+tags:
+  - probability
+  - bimonial
+---
