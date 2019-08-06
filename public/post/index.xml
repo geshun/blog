@@ -17,7 +17,7 @@
       <pubDate>Mon, 05 Aug 2019 00:00:00 +0000</pubDate>
       
       <guid>/2019/08/05/simulating-coin-flip/</guid>
-      <description></description>
+      <description>Simulation is one of the statistical methods for looking at the best decision to make given a scenario. The underlying idea is that, if we can playout the scenario a lot of times, we can know the expected outcome of the scenario.</description>
     </item>
     
   </channel>
