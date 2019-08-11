@@ -12,13 +12,12 @@
     
     
     <item>
-      <title>Simulating Coin Flip</title>
+      <title>Simulating coin flips using bootstrapping</title>
       <link>/2019/08/05/simulating-coin-flip/</link>
       <pubDate>Mon, 05 Aug 2019 00:00:00 +0000</pubDate>
       
       <guid>/2019/08/05/simulating-coin-flip/</guid>
-      <description>Simulation is one of the statistical methods for looking at the best decision to make given a scenario. The underlying idea is that, if we can playout the scenario a lot of times, we can know the expected outcome of the scenario.
-Required Packageslibrary(tidyverse)Flipping a CoinSuppose you flip a fair coin ten times, what’s the most likely number of head? Since heads and tails are equally likely, you might say 5 will be heads and 5 will be tail.</description>
+      <description>Software EnvironmentWe will be using the R programming language to implement our simulation strategies. R is open source and has powerful libraries to make certain data analysis tasks very easy. We will make use of the purrr package, however, you can ignore it and go through the entire post. I only used it at the later part of the miscellaneous section to make the reader consider functional programming with purrr.</description>
     </item>
     
   </channel>
