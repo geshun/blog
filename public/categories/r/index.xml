@@ -17,7 +17,7 @@
       <pubDate>Mon, 05 Aug 2019 00:00:00 +0000</pubDate>
       
       <guid>/2019/08/05/simulating-coin-flip/</guid>
-      <description>Software EnvironmentWe will be using the R programming language to implement our simulation strategies. R is open source and has powerful libraries to make certain data analysis tasks very easy. We will make use of the purrr package, however, you can ignore it and go through the entire post. I only used it at the later part of the miscellaneous section to make the reader consider functional programming with purrr.</description>
+      <description>Software EnvironmentWe will be using the R programming language to implement our simulation strategies. R is open source and has powerful libraries to make certain data analysis tasks very easy. We will make use of the purrr package, however, you can ignore it and go through the entire post. I only used it at the later part of the miscellaneous section to make the reader consider it’s functional programming capabilities.</description>
     </item>
     
   </channel>
