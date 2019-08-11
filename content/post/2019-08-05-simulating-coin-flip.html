@@ -1,5 +1,5 @@
 ---
-title: Simulating Coin Flip
+title: Simulating coin flips using bootstrapping
 author: geshun
 date: '2019-08-05'
 slug: simulating-coin-flip
@@ -7,41 +7,47 @@ categories:
   - R
 tags:
   - probability
-  - bimonial
-output: 
-  html_document:
-    toc: true
-    toc_float: true
-    theme: cosmo
-    highlight: tango
+  - sampling
 ---
 
 
 
-<p>Simulation is one of the statistical methods for looking at the best decision to make given a scenario. The underlying idea is that, if we can playout the scenario a lot of times, we can know the expected outcome of the scenario.</p>
-<div id="required-packages" class="section level2">
-<h2>Required Packages</h2>
-<pre class="r"><code>library(tidyverse)</code></pre>
+<div id="software-environment" class="section level2">
+<h2>Software Environment</h2>
+<p>We will be using the <strong>R</strong> programming language to implement our simulation strategies. R is open source and has powerful libraries to make certain data analysis tasks very easy. We will make use of the <em>purrr</em> package, however, you can ignore it and go through the entire post. I only used it at the later part of the miscellaneous section to make the reader consider it’s functional programming capabilities.</p>
+<pre class="r"><code>if (!require(purrr)) install.packages(&quot;purrr&quot;)
+library(purrr)</code></pre>
 </div>
-<div id="flipping-a-coin" class="section level2">
-<h2>Flipping a Coin</h2>
-<p>Suppose you flip a fair coin ten times, what’s the most likely number of head? Since heads and tails are equally likely, you might say 5 will be heads and 5 will be tail. Suppose we bet that I give you a dollar if you guessed right and you give me a dollar otherwise. Do you have to take the bet?</p>
-<p>Under the assumption that the coin is fair and thus, head and tail are equally likely, we can say that the outcome is either 1 for head or 0 for tail and represent the set of possible outcome of throwing a fair coin as <code>c(0, 1)</code>. The <code>sample()</code> function from the base package can be used to select either a head or tail with replacement, thus <code>x &lt;- sample(c(0, 1), 10, replace =  TRUE)</code>. Taking <code>sum(x)</code> will give us the number of heads. Let’s wrap that in a function.</p>
-<pre class="r"><code>toss_coin_n_times &lt;- function(n = 10) {
-  x &lt;- sample(c(0, 1), n, replace = TRUE)
+<div id="what-is-simulation" class="section level2">
+<h2>What is simulation?</h2>
+<p>Simulation is one of the statistical methods for looking at the best decision to make given a scenario. It’s very powerful and intuitive. The underlying idea is that, if we can playout the scenario a lot of times, we can know its expected outcome. Since it usually involves generating large volume of data, it’s normally done with a help of a computer.</p>
+<p>Random variables are bulding blocks of stochastic simulations. That is, we look at an experiment whose outcome is uncertain and repeat that experiment multiple times in an identical and independent way. We then look at all the outcomes from the multiple generations of the experiment and access the accuracy of the estimate we make.</p>
+</div>
+<div id="coin-flipping-experiment" class="section level2">
+<h2>Coin-Flipping Experiment</h2>
+<p>Suppose you flip a fair coin <code>10</code> times, what’s the most likely number of heads? Since head and tail are equally likely (for a given coin flip), you might say <code>5</code> will be heads and <code>5</code> will be tails. Suppose we bet that I give you <code>100</code> dollars if you guessed right and you give me <code>100</code> dollars otherwise. How would you decide whether to take the bet?</p>
+<p>Though you might not call it simulation, one way of looking at this is to consider the experiment as a game and play it multiple times until it becomes clear to you if it worths spending money on. We will use a computer to mimic this game and evaluate the results statistically.</p>
+</div>
+<div id="sampling" class="section level2">
+<h2>Sampling</h2>
+<p>Under the assumption that the coin is fair and thus, head and tail are equally likely, we can say that the outcome is either <code>1</code> for head or <code>0</code> for tail and represent the set of possible outcome of throwing a fair coin as <code>c(0, 1)</code>. The <code>sample()</code> function from the base package can be used to select either a head or a tail with replacement, and thus <code>x &lt;- sample(c(0, 1), 10, replace =  TRUE)</code>. Taking <code>sum(x)</code> will give us the number of heads. Let’s wrap that in a function as follows:</p>
+<pre class="r"><code>toss_n_times &lt;- function(n = 10) {
+  x &lt;- sample(c(0, 1), size = n, replace = TRUE)
   sum(x)
-}
-
-set.seed(1)
-toss_coin_n_times()</code></pre>
+}</code></pre>
+<pre class="r"><code>set.seed(1)
+toss_n_times()</code></pre>
 <pre><code>## [1] 4</code></pre>
-<pre class="r"><code># 4
-
-set.seed(1234)
-toss_coin_n_times()</code></pre>
+<pre class="r"><code># 4 heads</code></pre>
+<pre class="r"><code>set.seed(1234)
+toss_n_times()</code></pre>
 <pre><code>## [1] 6</code></pre>
-<pre class="r"><code># 6</code></pre>
-<p>To get closer to the true probability of the outcome of tossing a fair coin 10 times, we need to repeat this experiment dozen times. Since the claim is that there will be 5 heads and 5 tails, we will find the proportion of times we get 5 heads. As a starter, we will run our <code>toss_coin_n_times</code> function 100 times. Once again, let’s wrap our loop in a function. We will use the idea that <code>mean</code> of a vector with <code>TRUE</code> or <code>FALSE</code> elements is the proportion of true(s) in the vector. Note that <code>mean</code> coerces <code>TRUE</code> to <code>1</code> and <code>FALSE</code> to <code>0</code>.</p>
+<pre class="r"><code># 6 heads</code></pre>
+</div>
+<div id="replicating" class="section level2">
+<h2>Replicating</h2>
+<p>In one instance, we had <code>4</code> heads and another <code>6</code> heads. We know that the set of possible outcomes of 10 coin flips resulting in heads is <span class="math inline">\(\{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10\}\)</span>. We need to know the probability of each of these possible outcomes. We can analytically compute the probabilities, however, we want to use simulation. In this case, we will use frequentist interpretation of probability where probability is defined as the limiting proportion of events in a sequence of independent identical experiments.</p>
+<p>To get closer to the true probability of the outcomes of tossing a fair coin <code>10</code> times (and counting the number of heads), we need to repeat this experiment many times. Since the claim is that there will be <code>5</code> heads and <code>5</code> tails, we will find the proportion of times we get exactly <code>5</code> heads. As a starter, we will run our <code>toss_n_times</code> function <code>100</code> times. Once again, let’s wrap our loop in a function. We will use the idea that <code>mean</code> of a vector with boolean (<code>TRUE</code> or <code>FALSE</code>) elements is the proportion of true(s) in the vector. Note that in R <code>mean</code> coerces <code>TRUE</code> to <code>1</code> and <code>FALSE</code> to <code>0</code>.</p>
 <pre class="r"><code>repeat_m_times &lt;- function(f, m = 100, heads = 5) {
   outcome &lt;- numeric(length = m)
   for (i in 1:m) {
@@ -49,57 +55,43 @@ toss_coin_n_times()</code></pre>
   }
   list(proportion = mean(outcome == heads), 
        outcomes = outcome)
-}
-
-set.seed(1)
-repeat_m_times(toss_coin_n_times)$proportion</code></pre>
+}</code></pre>
+<pre class="r"><code>set.seed(1)
+repeat_m_times(toss_n_times)$proportion</code></pre>
 <pre><code>## [1] 0.26</code></pre>
-<pre class="r"><code># 0.26 (26% of the time we get heads)
-
-set.seed(1234)
-repeat_m_times(toss_coin_n_times)$proportion</code></pre>
+<pre class="r"><code># 0.26 (26% of the time we get heads)</code></pre>
+<pre class="r"><code>set.seed(1234)
+repeat_m_times(toss_n_times)$proportion</code></pre>
 <pre><code>## [1] 0.24</code></pre>
-<pre class="r"><code># 0.24 (24% of the time we get heads)
-
-# let&#39;s run it 1 million times
-result &lt;- repeat_m_times(toss_coin_n_times, m = 1e4)
-result$proportion</code></pre>
-<pre><code>## [1] 0.2416</code></pre>
-<pre class="r"><code># around 24% all the time
-
-hist(result$outcomes)</code></pre>
-<p><img src="/post/2019-08-05-simulating-coin-flip_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
-<p>We can say that we have about 24% chance of getting 5 heads out of throwing a fair coin 10 times. This is not what we expected. Note: We need to visualize the distribution of our coin toss with a histogram.</p>
-<p>R often provides ways of escape when using <code>for</code> loops. The loop could have been replaced with the <code>replicate()</code> function from the base package. We can achieve the same result with <code>replicate(100, toss_coin_n_times())</code>. The <code>sapply</code> function from the apply family can also be useful in this case <code>sapply(rep(10, 100), toss_coin_n_times)</code>. You guessed right if you thought of <code>map_dbl</code> from the purrr package. Which we can use in this way: <code>map_dbl(1:100, ~toss_coin_n_times(10))</code>.</p>
-<p>In functional programming terms, the purrr package offers us more flexibility. The strength of R is in it numerous packages and thanks to Hadley Wilkam for the purrr package. Our <code>toss_coin_n_times()</code> function could be written with purrr flavor.</p>
+<pre class="r"><code># 0.24 (24% of the time we get heads)</code></pre>
+<p>There is some volatility with the percentage of times we get <code>5</code> heads out of <code>10</code> tosses of a coin. Suppose we have repeated our experiment only <code>m = 5</code> times, we would have run into the possibility of getting our proportion to be <code>0%</code> sometimes and over <code>50%</code> some other times. One common mistake people make when using simulation is the small number of replications of the experiment they make. Independent and identical repeatition of the experiment would have to be performed enough number of times to realize the true probabilities. Let’s repeat the experiment <code>1</code> million times.</p>
+<pre class="r"><code>set.seed(1)
+repeat_m_times(toss_n_times, m = 1e6)$proportion</code></pre>
+<pre><code>## [1] 0.246705</code></pre>
+<pre class="r"><code># 0.246705</code></pre>
+<pre class="r"><code>set.seed(1234)
+repeat_m_times(toss_n_times, m = 1e6)$proportion</code></pre>
+<pre><code>## [1] 0.246152</code></pre>
+<pre class="r"><code># 0.246152</code></pre>
+<p>Let’s visualize the distribution of our outcomes using a histogram.</p>
+<pre class="r"><code>result &lt;- repeat_m_times(toss_n_times, m = 1e6)
+hist(result$outcomes, 
+     main = &quot;Number of heads from 10 coin flips&quot;, 
+     xlab = &quot;Possible outcomes&quot;)</code></pre>
+<p><img src="/post/2019-08-05-simulating-coin-flip_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+</div>
+<div id="conclusion" class="section level2">
+<h2>Conclusion</h2>
+<p>We can say that we have about <code>24.6%</code> chance of getting exactly <code>5</code> heads out of throwing a fair coin <code>10</code> times. Unless you have unused money to spend and you are not risk averse, the bet is very risky to be engaged in. Your chance of losing is more than winning.</p>
+</div>
+<div id="miscellaneous" class="section level2">
+<h2>Miscellaneous</h2>
+<p><strong>R</strong> often provides ways of escape when using <code>for</code> loops. The loop could have been replaced with the <code>replicate()</code> function from the base package. We can achieve the same result with <code>100</code> repeatitions using <code>replicate(100, toss_n_times())</code>. The <code>sapply</code> function from the apply family can also be useful in this case <code>sapply(rep(10, 100), toss_n_times)</code>. You guessed right if you thought of <code>map_dbl</code> from the purrr package; which we can use in this way: <code>map_dbl(1:100, ~toss_n_times(10))</code>.</p>
+<p>In functional programming terms, the purrr package offers us more flexibility. The strength of R is in it numerous packages. Thanks to Hadley Wickham for the purrr package. Our <code>toss_n_times()</code> function could have be written with purrr flavor.</p>
 <pre class="r"><code>toss_n_times &lt;- compose(sum, 
                         partial(sample, x = c(0, 1), replace = TRUE))
-result &lt;- map_dbl(1:100, ~toss_n_times(10)) 
+result &lt;- map_dbl(1:1000, ~toss_n_times(10)) 
 mean(result == 5)</code></pre>
-<pre><code>## [1] 0.24</code></pre>
-<p>Which of the implimentation is fast? We could also do parallel programming here since our problem can be classified as embarassingly parallel.</p>
-<p>Our coin toss bet could have been modeled using Binomial distribution. At each toss of the coin, the outcome of one does not influence the other, hence independent outcomes. The <code>rbinom()</code> function from the stats package will be useful in this case. Instead of flipping one coin 10 times, we can capture the notion of replicating this single coin flipped 10 times by considering say 100 coins each flipped 10 times. Here, the <code>repeat_m_times</code> is the same as m-number of coins.</p>
-<pre class="r"><code>result &lt;- rbinom(100, 10, 0.5)
-mean(result == 5)</code></pre>
-<pre><code>## [1] 0.23</code></pre>
-<p>Re-thinking the problem in the context of Binomial distribution allows us to utilize a lower level function (written in C) that is supper fast not only that its rigorous and simple to impliment with few lines of code. We can also talk about the notion of bais coin by just altering the probability to be not equal to <code>0.5</code>.</p>
-</div>
-<div id="density" class="section level2">
-<h2>Density</h2>
-<p>We want to know the number of heads after 10 flips of a fair coin, thus our random variable. The outcome of each flip or trial is independent of the outcome of the other. Also, each outcome is dichotomous, thus either head or tail, yes or no, success or failure. Again, the number of trails is fixed. In our case 10 flips. And finally, the probability of success or getting a head is fixed for each trial. The above is what makes our random variable a Binomial random variable.</p>
-<p>We find the probability a Binomial random variable <span class="math inline">\(X \sim Binomial(10, 0.5)\)</span>, with 10 coins, each with a 50% probability-results in an outcome of 5, <span class="math inline">\(Pr(X = 5)\)</span>. Flipping a single fair coin 10 times is same as flipping 10 fair coins once. Now, our task is to answer, what is the probability that the outcome results in 5 heads? One way to find out is to simulate many draws from the Binomial distribution <code>X</code> above and see how common each outcome is.</p>
-<p>The <code>rbinom</code> function does that for us. If we want to simulate say 1e6 times, we do <code>flips &lt;- rbinom(1e6, 10, 0.5)</code>. We plot <code>flips</code> as histogram to see the relative frequency of each possible outcome <span class="math inline">\(\{0, 1, 2, ..., 10\}\)</span>. That is, out of the 10 flips (of a single coin) or 10 coins (of a single flip), we can have no heads, 1 head, 2 heads, …, 10 heads.</p>
-<pre class="r"><code>flips &lt;- rbinom(1e6, 10, 0.5)
-qplot(flips, 
-      geom = &#39;histogram&#39;, 
-      fill = I(&quot;blue&quot;), 
-      xlab = &quot;outcome&quot;, 
-      ylab = &quot;frequency&quot;, 
-      alpha = I(.4))</code></pre>
-<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
-<p><img src="/post/2019-08-05-simulating-coin-flip_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
-<pre class="r"><code>mean(flips == 5)</code></pre>
-<pre><code>## [1] 0.245655</code></pre>
-<p>There are about 24.6% chance of getting 5 heads out of 10 flips. This (24.6%) is called the density of the binomial at point 5. R provides the <code>dbinom</code> function which estimates the exact density of an outcome. <code>dbinom</code> takes 3 arguments, the outcome we are estimating the density at (which is 5), the number of coins (which is 10) and the probability of each being heads (which is 0.5); <code>dbinom(5, 10, 0.5)</code>. This confirms the result from our simulation, that the probability is about 24.6%.</p>
-<p>The analytical approach formulae is <span class="math inline">\(\binom{n}{k}p^k(1-p)^{(n-k)} \rightarrow \binom{10}{5}0.5^5(1-0.5)^{(10-5)}\rightarrow 0.246\)</span></p>
+<pre><code>## [1] 0.215</code></pre>
+<p>Which of the implementation is fast? Do microbenchmarking to find out. We could also consider parallel programming here since our simulation problem can be classified as embarassingly parallel.</p>
 </div>
