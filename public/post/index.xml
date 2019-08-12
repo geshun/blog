@@ -6,10 +6,19 @@
     <description>Recent content in Posts on Geshun</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 05 Aug 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 12 Aug 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Simulating coin-flips from a known distribution</title>
+      <link>/2019/08/12/simulating-coin-flips-from-a-known-distribution/</link>
+      <pubDate>Mon, 12 Aug 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/2019/08/12/simulating-coin-flips-from-a-known-distribution/</guid>
+      <description>Coin-Flip GameSuppose a fair coin is flipped 10 times, how many of the flips will result in heads? Since heads and tails are equally likely, you might say half of the flips will be heads and half will be tails. Suppose we bet that I give you 100 dollars if you guessed right and you give me 100 dollars otherwise. How would you decide whether to take the bet?</description>
+    </item>
     
     <item>
       <title>Simulating coin flips using bootstrapping</title>

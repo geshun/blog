@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>probability on Geshun</title>
-    <link>/tags/probability/</link>
-    <description>Recent content in probability on Geshun</description>
+    <title>distribution on Geshun</title>
+    <link>/tags/distribution/</link>
+    <description>Recent content in distribution on Geshun</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 12 Aug 2019 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/tags/probability/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/tags/distribution/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -18,15 +18,6 @@
       
       <guid>/2019/08/12/simulating-coin-flips-from-a-known-distribution/</guid>
       <description>Coin-Flip GameSuppose a fair coin is flipped 10 times, how many of the flips will result in heads? Since heads and tails are equally likely, you might say half of the flips will be heads and half will be tails. Suppose we bet that I give you 100 dollars if you guessed right and you give me 100 dollars otherwise. How would you decide whether to take the bet?</description>
-    </item>
-    
-    <item>
-      <title>Simulating coin flips using bootstrapping</title>
-      <link>/2019/08/05/simulating-coin-flip/</link>
-      <pubDate>Mon, 05 Aug 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/2019/08/05/simulating-coin-flip/</guid>
-      <description>Software EnvironmentWe will be using the R programming language to implement our simulation strategies. R is open source and has powerful libraries to make certain data analysis tasks very easy. We will make use of the purrr package, however, you can ignore it and go through the entire post. I only used it at the later part of the miscellaneous section to make the reader consider it’s functional programming capabilities.</description>
     </item>
     
   </channel>

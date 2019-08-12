@@ -6,15 +6,33 @@
     <description>Recent content in Tags on Geshun</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 05 Aug 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 12 Aug 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>density</title>
+      <link>/tags/density/</link>
+      <pubDate>Mon, 12 Aug 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/density/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>distribution</title>
+      <link>/tags/distribution/</link>
+      <pubDate>Mon, 12 Aug 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/distribution/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>probability</title>
       <link>/tags/probability/</link>
-      <pubDate>Mon, 05 Aug 2019 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 12 Aug 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/probability/</guid>
       <description></description>
