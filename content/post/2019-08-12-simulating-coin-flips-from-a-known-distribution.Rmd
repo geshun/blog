@@ -1,0 +1,62 @@
+---
+title: Simulating coin-flips from a known distribution
+author: geshun
+date: '2019-08-12'
+slug: simulating-coin-flips-from-a-known-distribution
+categories:
+  - R
+tags:
+  - probability
+  - density
+  - distribution
+---
+
+## Coin-Flip Game
+
+Suppose a fair coin is flipped `10` times, how many of the flips will result in heads? Since heads and tails are equally likely, you might say half of the flips will be heads and half will be tails. Suppose we bet that I give you `100` dollars if you guessed right and you give me `100` dollars otherwise. How would you decide whether to take the bet?
+
+One way to look at this is to consider playing the game multiple times on your own until it becomes clear to you whether or not it worths spending money on. See [coin flip simulation using bootstrapping](sim2.html) for sampling with replacement approach without modeling the coin-flip game in terms of a known probability distribution. 
+
+Another way to find out is to simulate many draws from a known distribution and see how common each outcome is. We will use the R programming language for our exploration. Basically, we enter the deal if the probability of getting `5` heads out of `10` coin flips is high, and in our case we are assuming this probability will be `50%`.
+
+## Sampling from Binomial Distribution
+
+Our coin toss game can be modeled using Binomial distribution. We want to know the number of heads after `10` flips of a fair coin, hence our random variable. The outcome of each flip is independent of the outcome of the other. Also, each outcome is dichotomous, thus either head or tail, yes or no, success or failure. Again, the number of trails is fixed, and in our case `10` flips. Finally, the probability of success (or getting a head) is fixed for each trial (at `0.5`). The above considerations are what make our random variable Binomial.
+
+The `rbinom()` function from the stats package will be useful in this case; type `?rbinom` at the console to see the documentation. Instead of flipping one coin `10` times, we can capture the notion of replicating this single coin flipped `10` times by considering say `100` identical coins each flipped `10` times. We will use the trick that `mean` of a vector with boolean (`TRUE` or `FALSE`) elements is the proportion of true(s) in the vector. Note that in R, `mean()` function coerces `TRUE` to `1` and `FALSE` to `0`.
+
+```{r}
+set.seed(1234)
+result_1 <- rbinom(100, 10, 0.5)
+mean(result_1 == 5)
+```
+
+If we want to replicate the experiment say 1 million times, we just do
+
+```{r}
+set.seed(1234)
+result_2 <- rbinom(1e6, 10, 0.5)
+mean(result_2 == 5)
+```
+
+Re-thinking the problem in the context of Binomial distribution allows us to utilize a lower level `rbinom()` function (written in C language) which is super fast. It's also rigorous and simple to implement with few lines of code. We can also talk about the notion of bias coin by just altering the probability to be not equal to `0.5`.
+
+In simulation models, we usually take large identical and independent samples. We will use the result from running 1 million experiments. Approximately, the probability of getting `5` heads out of `10` flips of a coin is `24.6%` which is half short of our guess that it will be `50%`. Thinking about our coin flip game a little more, we could have asked what are the possible number of heads out of `10` flips of a coin. This will be $\{0, 1, 2, \dots, 10\}$. If we say `5` heads will be recorded `50%` of the time, then we are saying the other outcomes are to share the other `50%`. This could have sounded an alarm in our minds and made us question our guess and be hesitant with the bet.
+
+## Density
+
+We find the probability a Binomial random variable $X \sim Binomial(10, 0.5)$, with `10` coins, each with a `0.5` probability results in an outcome of `5`, $\mathcal{P}(X = 5)$. Now, our task is to answer, what is the probability that the outcome results in `5` heads? 
+
+There are about `24.6%` chance of getting `5` heads out of `10` flips. This `24.6%` is called the density of the binomial at point `5`. R provides the `dbinom()` function which estimates the exact density of an outcome. `dbinom` takes 3 arguments, the outcome we are estimating the density at (which is `5`), the number of coins (which is `10`) and the probability of each being heads (which is `0.5`).
+
+```{r}
+dbinom(5, 10, 0.5)
+```
+
+This confirms the result from our simulation, that the probability is about `24.6%`.
+We could have also computed this analytically using the formula: $$\binom{n}{k}p^k(1-p)^{(n-k)} = \frac{n!}{k!(n-k)!}p^k(1-p)^{(n-k)} $$
+$$\binom{10}{5}0.5^5(1-0.5)^{(10-5)}\rightarrow 0.2460938$$
+
+## Conclusion
+
+The odds are against you if you play the game. You are expected to win only `24.6%` of the time.
