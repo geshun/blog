@@ -15,7 +15,7 @@ tags:
 
 Suppose a fair coin is flipped `10` times, how many of the flips will result in heads? Since heads and tails are equally likely, you might say half of the flips will be heads and half will be tails. Suppose we bet that I give you `100` dollars if you guessed right and you give me `100` dollars otherwise. How would you decide whether to take the bet?
 
-One way to look at this is to consider playing the game multiple times on your own until it becomes clear to you whether or not it worths spending money on. See [coin flip simulation using bootstrapping](sim2.html) for sampling with replacement approach without modeling the coin-flip game in terms of a known probability distribution. 
+One way to look at this is to consider playing the game multiple times on your own until it becomes clear to you whether or not it worths spending money on. See [coin flip simulation using bootstrapping](/2019/08/05/simulating-coin-flip/) for sampling with replacement approach without modeling the coin-flip game in terms of a known probability distribution. 
 
 Another way to find out is to simulate many draws from a known distribution and see how common each outcome is. We will use the R programming language for our exploration. Basically, we enter the deal if the probability of getting `5` heads out of `10` coin flips is high, and in our case we are assuming this probability will be `50%`.
 
