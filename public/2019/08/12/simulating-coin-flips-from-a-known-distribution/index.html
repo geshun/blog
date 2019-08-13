@@ -76,7 +76,7 @@
 <div id="coin-flip-game" class="section level2">
 <h2>Coin-Flip Game</h2>
 <p>Suppose a fair coin is flipped <code>10</code> times, how many of the flips will result in heads? Since heads and tails are equally likely, you might say half of the flips will be heads and half will be tails. Suppose we bet that I give you <code>100</code> dollars if you guessed right and you give me <code>100</code> dollars otherwise. How would you decide whether to take the bet?</p>
-<p>One way to look at this is to consider playing the game multiple times on your own until it becomes clear to you whether or not it worths spending money on. See <a href="sim2.html">coin flip simulation using bootstrapping</a> for sampling with replacement approach without modeling the coin-flip game in terms of a known probability distribution.</p>
+<p>One way to look at this is to consider playing the game multiple times on your own until it becomes clear to you whether or not it worths spending money on. See <a href="/2019/08/05/simulating-coin-flip/">coin flip simulation using bootstrapping</a> for sampling with replacement approach without modeling the coin-flip game in terms of a known probability distribution.</p>
 <p>Another way to find out is to simulate many draws from a known distribution and see how common each outcome is. We will use the R programming language for our exploration. Basically, we enter the deal if the probability of getting <code>5</code> heads out of <code>10</code> coin flips is high, and in our case we are assuming this probability will be <code>50%</code>.</p>
 </div>
 <div id="sampling-from-binomial-distribution" class="section level2">
