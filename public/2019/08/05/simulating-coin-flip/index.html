@@ -108,7 +108,7 @@ toss_n_times()</code></pre>
 <div id="replicating" class="section level2">
 <h2>Replicating</h2>
 <p>In one instance, we had <code>4</code> heads and another <code>6</code> heads. We know that the set of possible outcomes of 10 coin flips resulting in heads is <span class="math inline">\(\{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10\}\)</span>. We need to know the probability of each of these possible outcomes. We can analytically compute the probabilities, however, we want to use simulation. In this case, we will use frequentist interpretation of probability where probability is defined as the limiting proportion of events in a sequence of independent identical experiments.</p>
-<p>To get closer to the true probability of the outcomes of tossing a fair coin <code>10</code> times (and counting the number of heads), we need to repeat this experiment many times. Since the claim is that there will be <code>5</code> heads and <code>5</code> tails, we will find the proportion of times we get exactly <code>5</code> heads. As a starter, we will run our <code>toss_n_times</code> function <code>100</code> times. Once again, let’s wrap our loop in a function. We will use the idea that <code>mean</code> of a vector with boolean (<code>TRUE</code> or <code>FALSE</code>) elements is the proportion of true(s) in the vector. Note that in R <code>mean</code> coerces <code>TRUE</code> to <code>1</code> and <code>FALSE</code> to <code>0</code>.</p>
+<p>To get closer to the true probability of the outcomes of tossing a fair coin <code>10</code> times (and counting the number of heads), we need to repeat this experiment many times. Since the claim is that there will be <code>5</code> heads and <code>5</code> tails, we will find the proportion of times we get exactly <code>5</code> heads. As a starter, we will run our <code>toss_n_times</code> function <code>100</code> times. Once again, let’s wrap our loop in a function. We will use the idea that the <code>mean</code> of a vector with boolean (<code>TRUE</code> or <code>FALSE</code>) elements is the proportion of true(s) in the vector. Note that in R, <code>mean()</code> function coerces <code>TRUE</code> to <code>1</code> and <code>FALSE</code> to <code>0</code>.</p>
 <pre class="r"><code>repeat_m_times &lt;- function(f, m = 100, heads = 5) {
   outcome &lt;- numeric(length = m)
   for (i in 1:m) {
@@ -125,7 +125,7 @@ repeat_m_times(toss_n_times)$proportion</code></pre>
 repeat_m_times(toss_n_times)$proportion</code></pre>
 <pre><code>## [1] 0.24</code></pre>
 <pre class="r"><code># 0.24 (24% of the time we get heads)</code></pre>
-<p>There is some volatility with the percentage of times we get <code>5</code> heads out of <code>10</code> tosses of a coin. Suppose we have repeated our experiment only <code>m = 5</code> times, we would have run into the possibility of getting our proportion to be <code>0%</code> sometimes and over <code>50%</code> some other times. One common mistake people make when using simulation is the small number of replications of the experiment they make. Independent and identical repeatition of the experiment would have to be performed enough number of times to realize the true probabilities. Let’s repeat the experiment <code>1</code> million times.</p>
+<p>There is volatility with the percentage of times we get <code>5</code> heads out of <code>10</code> tosses of a coin. Suppose we have repeated our experiment only <code>m = 5</code> times, we would have run into the possibility of getting our proportion to be <code>0%</code> sometimes and over <code>50%</code> some other times. One common mistake people make when using simulation is the small number of replications of the experiment they make. Independent and identical repeatition of the experiment would have to be performed enough number of times to realize the true probabilities. Let’s repeat the experiment <code>1</code> million times.</p>
 <pre class="r"><code>set.seed(1)
 repeat_m_times(toss_n_times, m = 1e6)$proportion</code></pre>
 <pre><code>## [1] 0.246705</code></pre>
@@ -134,27 +134,31 @@ repeat_m_times(toss_n_times, m = 1e6)$proportion</code></pre>
 repeat_m_times(toss_n_times, m = 1e6)$proportion</code></pre>
 <pre><code>## [1] 0.246152</code></pre>
 <pre class="r"><code># 0.246152</code></pre>
-<p>Let’s visualize the distribution of our outcomes using a histogram.</p>
-<pre class="r"><code>result &lt;- repeat_m_times(toss_n_times, m = 1e6)
-hist(result$outcomes, 
-     main = &quot;Number of heads from 10 coin flips&quot;, 
-     xlab = &quot;Possible outcomes&quot;)</code></pre>
+<p>Let’s visualize the frequency distribution of our outcomes.</p>
+<pre class="r"><code>result &lt;- repeat_m_times(toss_n_times, m = 1e6)$outcomes
+result &lt;- table(result)
+
+plot(result / 1000, 
+     col = &quot;blue&quot;,
+     xlab = &quot;Outcome&quot;, 
+     ylab = &quot;Frequency (in thousand)&quot;)</code></pre>
 <p><img src="/post/2019-08-05-simulating-coin-flip_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 </div>
 <div id="conclusion" class="section level2">
 <h2>Conclusion</h2>
-<p>We can say that we have about <code>24.6%</code> chance of getting exactly <code>5</code> heads out of throwing a fair coin <code>10</code> times. Unless you have unused money to spend and you are not risk averse, the bet is very risky to be engaged in. Your chance of losing is more than winning.</p>
+<p>We can say that we have about <code>24.6%</code> chance of getting exactly <code>5</code> heads out of throwing a fair coin <code>10</code> times. Unless you have unused money to spend and you are not risk averse, the bet is very risky to entertain. Your chance of losing is more than winning.</p>
 </div>
 <div id="miscellaneous" class="section level2">
 <h2>Miscellaneous</h2>
-<p><strong>R</strong> often provides ways of escape when using <code>for</code> loops. The loop could have been replaced with the <code>replicate()</code> function from the base package. We can achieve the same result with <code>100</code> repeatitions using <code>replicate(100, toss_n_times())</code>. The <code>sapply</code> function from the apply family can also be useful in this case <code>sapply(rep(10, 100), toss_n_times)</code>. You guessed right if you thought of <code>map_dbl</code> from the purrr package; which we can use in this way: <code>map_dbl(1:100, ~toss_n_times(10))</code>.</p>
-<p>In functional programming terms, the purrr package offers us more flexibility. The strength of R is in it numerous packages. Thanks to Hadley Wickham for the purrr package. Our <code>toss_n_times()</code> function could have be written with purrr flavor.</p>
+<p><strong>R</strong> often provides ways of escape when using <code>for</code> loop. The loop above could have been replaced with the <code>replicate()</code> function from the base package. We can achieve the same result with <code>100</code> repeatitions using <code>replicate(100, toss_n_times())</code>. The <code>sapply</code> function from the apply family can also be useful in this case <code>sapply(rep(10, 100), toss_n_times)</code>. You guessed right if you thought of <code>map_dbl</code> from the purrr package; which we can use in this way: <code>map_dbl(1:100, ~toss_n_times(10))</code>.</p>
+<p>In functional programming terms, the purrr package offers us more flexibility. The strength of R is in it numerous packages. Thanks to Hadley Wickham for the purrr package. Our <code>toss_n_times()</code> function could have been written with purrr flavor.</p>
 <pre class="r"><code>toss_n_times &lt;- compose(sum, 
                         partial(sample, x = c(0, 1), replace = TRUE))
 result &lt;- map_dbl(1:1000, ~toss_n_times(10)) 
 mean(result == 5)</code></pre>
 <pre><code>## [1] 0.215</code></pre>
-<p>Which of the implementation is fast? Do microbenchmarking to find out. We could also consider parallel programming here since our simulation problem can be classified as embarassingly parallel.</p>
+<p>Which of the implementation is fast? Do microbenchmarking to find out. Parallel programming can be considered here because our simulation problem can be classified as embarassingly parallel.</p>
+<p>Also, see how the same problem can be <a href="/2019/08/12/simulating-coin-flips-from-a-known-distribution/">simulated assuming a known probability distribution</a>.</p>
 </div>
 
     </div>
